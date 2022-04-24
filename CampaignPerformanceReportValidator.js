@@ -125,9 +125,9 @@ export default class CampaignPerformanceReportValidator {
         if (this.isDevRunningMode()) {
             [this.parsedBodyExpectedData, this.parsedBodyActualData] = [this.parsedBodyActualData, this.parsedBodyExpectedData];
             [this.validationDataSize, this.expTotalRowNum] = [this.expTotalRowNum, this.validationDataSize];
+            console.warn(this.runningMode, "Switched actual with expected for DEV mode");
 
-            if (this.isDebugOn) {
-                console.warn(this.runningMode, "Switched actual with expected for DEV mode");
+            if (this.isDebugOn) {                
                 console.log(this.runningMode, "parsedBodyActualData", this.parsedBodyActualData);
                 console.log(this.runningMode, "parsedBodyActualDataMap", this.parsedBodyActualDataMap);
             }
