@@ -87,7 +87,14 @@ export default class CampaignPerformanceReportValidator {
     }
 
     generateRowKey(row) {
-        return this.columnNamesForKeyGeneration.map((columnName) => row[columnName]).join('_');;
+        return this.columnNamesForKeyGeneration.map((columnName) => row[columnName]).join('_');
+    }
+
+    convertActualDataToMap() {
+        this.parsedBodyActualData.forEach((actualDataRow) => {
+            const key = this.generateRowKey(actualDataRow);
+            this.parsedBodyActualDataMap.set(key, actualDataRow);
+        });
     }
 
     init() {
@@ -117,15 +124,16 @@ export default class CampaignPerformanceReportValidator {
         this.runningMode = this.isUndefinedOrEmptyStr(this.runningMode, "runningMode") ?
             "PROD" : this.runningMode;
 
-        this.parsedBodyActualData.forEach((actualDataRow) => {
-            const key = this.generateRowKey(actualDataRow);
-            this.parsedBodyActualDataMap.set(key, actualDataRow);
-        });
+        if (this.isProdRunningMode() || this.isLocRunningMode) {
+            this.convertActualDataToMap();
+        }
 
         if (this.isDevRunningMode()) {
             [this.parsedBodyExpectedData, this.parsedBodyActualData] = [this.parsedBodyActualData, this.parsedBodyExpectedData];
             [this.validationDataSize, this.expTotalRowNum] = [this.expTotalRowNum, this.validationDataSize];
+
             console.warn(this.runningMode, "Switched actual with expected for DEV mode");
+            this.convertActualDataToMap();
 
             if (this.isDebugOn) {                
                 console.log(this.runningMode, "parsedBodyActualData", this.parsedBodyActualData);
