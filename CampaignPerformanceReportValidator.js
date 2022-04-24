@@ -147,7 +147,7 @@ export default class CampaignPerformanceReportValidator {
 
     validateColumnNamesMatch() {
         this.csvHeaderFields.forEach((columnName, index) => {
-            pm.expect(columnName).to.eql(parsedBodyActualData.meta.fields[index]);
+            pm.expect(columnName).to.eql(this.parsedBodyActualData.meta.fields[index]);
         });
     }
 
@@ -173,9 +173,7 @@ export default class CampaignPerformanceReportValidator {
 
         this.parsedBodyExpectedData.forEach((expectedRow) => {
             const key = this.generateRowKey(expectedRow);
-            const doesParsedBodyActualDataMapHasKey = this.parsedBodyActualDataMap.has(key);
-
-            const isIdentical = doesParsedBodyActualDataMapHasKey ? this.isEqual(expectedRow, this.parsedBodyActualDataMap.get(key)) : false;
+            const isIdentical = this.parsedBodyActualDataMap.has(key) ? this.isEqual(expectedRow, this.parsedBodyActualDataMap.get(key)) : false;
 
             if (isIdentical) {
                 ++validEntries;
