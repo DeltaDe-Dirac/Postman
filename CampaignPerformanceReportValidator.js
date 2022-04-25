@@ -124,7 +124,7 @@ class CampaignPerformanceReportValidator {
         this.runningMode = this.isUndefinedOrEmptyStr(this.runningMode, "runningMode") ?
             "PROD" : this.runningMode;
 
-        if (this.isProdRunningMode() || this.isLocRunningMode) {
+        if (this.isProdRunningMode() || this.isLocRunningMode()) {
             this.convertPlainDataToMap();
         } else if (this.isDevRunningMode()) {
             [this.parsedBodyExpectedData, this.parsedBodyActualData] = [this.parsedBodyActualData, this.parsedBodyExpectedData];
