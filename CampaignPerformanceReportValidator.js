@@ -13,8 +13,8 @@ class CampaignPerformanceReportValidator {
         this.parsedBodyActual = parsedBodyActual;
         this.validationDataSize = validationDataSize;
         this.expTotalRowNum = expTotalRowNum;
-        this.fieldsIndexesForValidation = fieldsIndexesForValidation;
         this.columnNamesForUniqueKey = columnNamesForUniqueKey;
+        this.columnNamesForValidation = columnNamesForValidation;
         this.runningMode = runningMode;
         this.isDebugOn = (isDebugOn === 'true');
 
@@ -58,7 +58,7 @@ class CampaignPerformanceReportValidator {
     }
 
     isValid(row, msg = '') {
-        for (let columnName of this.columnNamesForKeyGeneration) {
+        for (let columnName of this.columnNamesForUniqueKey) {
             if (!row[columnName] || row[columnName] === '') {
                 console.warn(this.runningMode, `Ignoring invalid row with [null/empty] value in [${msg}] for columnName [${columnName}]`);
                 return false;
@@ -94,12 +94,8 @@ class CampaignPerformanceReportValidator {
     init() {
         console.log(this.runningMode, "runningMode (init)");
 
-        this.csvHeaderFields = this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta, "parsedBodyExpected.meta") ||
-            this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta.fields, "parsedBodyExpected.meta.fields") ? [] : this.parsedBodyExpected.meta.fields;
-
-        this.columnNamesForKeyGeneration = this.isUndefinedOrZeroLength(this.fieldIndexesForUniqueKey, "fieldIndexesForUniqueKey") ?
-            this.csvHeaderFields : this.mapColumnIdsToColumnNames(this.fieldIndexesForUniqueKey);
         this.csvHeaderFields = this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta, "parsedBodyExpected.meta -> fallback to []") ||
+            this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta.fields, "parsedBodyExpected.meta.fields -> fallback to []") ? [] : this.parsedBodyExpected.meta.fields;
 
         this.columnNamesForUniqueKey = this.isUndefinedOrZeroLength(this.columnNamesForUniqueKey, "columnNamesForUniqueKey -> fallback to csvHeaderFields") ?
             this.csvHeaderFields : this.columnNamesForUniqueKey;
