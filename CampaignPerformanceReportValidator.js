@@ -98,7 +98,7 @@ class CampaignPerformanceReportValidator {
     }
 
     init() {
-        console.log(this.runningMode, "runningMode", this.runningMode);
+        console.log(this.runningMode, "runningMode (init)");
 
         this.csvHeaderFields = this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta, "parsedBodyExpected.meta") ||
             this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta.fields, "parsedBodyExpected.meta.fields") ? [] : this.parsedBodyExpected.meta.fields;
