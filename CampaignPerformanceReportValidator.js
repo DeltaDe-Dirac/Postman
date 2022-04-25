@@ -4,8 +4,8 @@ class CampaignPerformanceReportValidator {
         parsedBodyActual,
         validationDataSize,
         expTotalRowNum,
-        fieldIndexesForUniqueKey,
-        fieldsIndexesForValidation,
+        columnNamesForUniqueKey,
+        columnNamesForValidation,
         runningMode,
         isDebugOn) {
 
@@ -13,8 +13,8 @@ class CampaignPerformanceReportValidator {
         this.parsedBodyActual = parsedBodyActual;
         this.validationDataSize = validationDataSize;
         this.expTotalRowNum = expTotalRowNum;
-        this.fieldIndexesForUniqueKey = fieldIndexesForUniqueKey;
         this.fieldsIndexesForValidation = fieldsIndexesForValidation;
+        this.columnNamesForUniqueKey = columnNamesForUniqueKey;
         this.runningMode = runningMode;
         this.isDebugOn = (isDebugOn === 'true');
 
@@ -80,14 +80,8 @@ class CampaignPerformanceReportValidator {
         return "LOCAL" === this.runningMode;
     }
 
-    mapColumnIdsToColumnNames(columnIds) {
-        return columnIds
-            .map((columnId) => this.csvHeaderFields[columnId])
-            .filter((columnName) => !this.isUndefinedOrEmptyStr(columnName));
-    }
-
     generateRowKey(row) {
-        return this.columnNamesForKeyGeneration.map((columnName) => row[columnName]).join('_');
+        return this.columnNamesForUniqueKey.map((columnName) => row[columnName]).join('_');
     }
 
     convertPlainDataToMap() {
@@ -105,10 +99,13 @@ class CampaignPerformanceReportValidator {
 
         this.columnNamesForKeyGeneration = this.isUndefinedOrZeroLength(this.fieldIndexesForUniqueKey, "fieldIndexesForUniqueKey") ?
             this.csvHeaderFields : this.mapColumnIdsToColumnNames(this.fieldIndexesForUniqueKey);
+        this.csvHeaderFields = this.isUndefinedOrZeroLength(this.parsedBodyExpected.meta, "parsedBodyExpected.meta -> fallback to []") ||
 
-        this.columnNamesForValidation = this.isUndefinedOrZeroLength(this.fieldsIndexesForValidation, "fieldsIndexesForValidation") ?
-            this.csvHeaderFields : this.mapColumnIdsToColumnNames(this.fieldsIndexesForValidation);
+        this.columnNamesForUniqueKey = this.isUndefinedOrZeroLength(this.columnNamesForUniqueKey, "columnNamesForUniqueKey -> fallback to csvHeaderFields") ?
+            this.csvHeaderFields : this.columnNamesForUniqueKey;
 
+        this.columnNamesForValidation = this.isUndefinedOrZeroLength(this.columnNamesForValidation, "columnNamesForValidation -> fallback to csvHeaderFields") ?
+            this.csvHeaderFields : this.columnNamesForValidation;
 
 
         this.parsedBodyExpectedData = this.isUndefinedOrZeroLength(this.parsedBodyExpected.data, "parsedBodyExpectedData") ?
@@ -141,7 +138,7 @@ class CampaignPerformanceReportValidator {
             console.log(this.runningMode, "expTotalRowNum", this.expTotalRowNum);
 
             console.log(this.runningMode, "csvHeaderFields", this.csvHeaderFields);
-            console.log(this.runningMode, "columnNamesForKeyGeneration", this.columnNamesForKeyGeneration);
+            console.log(this.runningMode, "columnNamesForUniqueKey", this.columnNamesForUniqueKey);
             console.log(this.runningMode, "columnNamesForValidation", this.columnNamesForValidation);
 
             /* actual data print out only in DEV mode due to heavy data in PROD*/
