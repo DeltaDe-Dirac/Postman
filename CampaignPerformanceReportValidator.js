@@ -124,7 +124,7 @@ export default class CampaignPerformanceReportValidator {
         this.runningMode = this.isUndefinedOrEmptyStr(this.runningMode, "runningMode") ?
             "PROD" : this.runningMode;
 
-        if (this.isProdRunningMode() || this.isLocRunningMode) {
+        if (this.isProdRunningMode() || this.isLocRunningMode) {//???
             this.convertActualDataToMap();
         }
 
@@ -161,14 +161,7 @@ export default class CampaignPerformanceReportValidator {
 
     isEqual(expected, actual) {
         for (let columnName of this.columnNamesForValidation) {
-            if (expected[columnName] != actual[columnName]) {
-
-                if (this.isDebugOn) {
-                    console.log(this.runningMode, `expecting actual value [${actual[columnName]}] 
-                                    to be equal to [${expected[columnName]}], 
-                                        but wasn't due to column [${columnName}]`);
-                }
-
+            if (!actual[columnName] || expected[columnName] != actual[columnName]) {
                 return false;
             }
         }
@@ -186,10 +179,11 @@ export default class CampaignPerformanceReportValidator {
             if (isIdentical) {
                 ++validEntries;
             } else {
-                console.warn(this.runningMode, "expected row", expectedRow, "is not equal to actual row", this.parsedBodyActualDataMap.get(key), "or parsedBodyActualDataMap doesn't hold the key", key, "validEntries", validEntries);
+                console.warn(this.runningMode, "expected row", expectedRow, "is not equal to actual row", this.parsedBodyActualDataMap.get(key),
+                "or actual map doesn't hold the key", key, "valid entries", validEntries);
             }
 
-            pm.expect(true).to.eql(isIdentical);
+            pm.expect(isIdentical).to.eql(true);
         });
     }
 }
