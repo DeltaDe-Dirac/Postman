@@ -90,7 +90,7 @@ export default class CampaignPerformanceReportValidator {
         return this.columnNamesForKeyGeneration.map((columnName) => row[columnName]).join('_');
     }
 
-    convertActualDataToMap() {
+    convertPlainDataToMap() {
         this.parsedBodyActualData.forEach((actualDataRow) => {
             const key = this.generateRowKey(actualDataRow);
             this.parsedBodyActualDataMap.set(key, actualDataRow);
@@ -124,21 +124,14 @@ export default class CampaignPerformanceReportValidator {
         this.runningMode = this.isUndefinedOrEmptyStr(this.runningMode, "runningMode") ?
             "PROD" : this.runningMode;
 
-        if (this.isProdRunningMode() || this.isLocRunningMode) {//???
-            this.convertActualDataToMap();
-        }
-
-        if (this.isDevRunningMode()) {
+        if (this.isProdRunningMode() || this.isLocRunningMode) {
+            this.convertPlainDataToMap();
+        } else if (this.isDevRunningMode()) {
             [this.parsedBodyExpectedData, this.parsedBodyActualData] = [this.parsedBodyActualData, this.parsedBodyExpectedData];
             [this.validationDataSize, this.expTotalRowNum] = [this.expTotalRowNum, this.validationDataSize];
 
             console.warn(this.runningMode, "Switched actual with expected for DEV mode");
-            this.convertActualDataToMap();
-
-            if (this.isDebugOn) {                
-                console.log(this.runningMode, "parsedBodyActualData", this.parsedBodyActualData);
-                console.log(this.runningMode, "parsedBodyActualDataMap", this.parsedBodyActualDataMap);
-            }
+            this.convertPlainDataToMap();         
         }
 
         if (this.isDebugOn) {
@@ -150,6 +143,12 @@ export default class CampaignPerformanceReportValidator {
             console.log(this.runningMode, "csvHeaderFields", this.csvHeaderFields);
             console.log(this.runningMode, "columnNamesForKeyGeneration", this.columnNamesForKeyGeneration);
             console.log(this.runningMode, "columnNamesForValidation", this.columnNamesForValidation);
+
+            /* actual data print out only in DEV mode due to heavy data in PROD*/
+            if (this.isDevRunningMode()) {                
+                console.log(this.runningMode, "parsedBodyActualData", this.parsedBodyActualData);
+                console.log(this.runningMode, "parsedBodyActualDataMap", this.parsedBodyActualDataMap);
+            }
         }
     }
 
