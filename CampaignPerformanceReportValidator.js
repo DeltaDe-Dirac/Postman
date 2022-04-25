@@ -131,7 +131,7 @@ class CampaignPerformanceReportValidator {
             [this.validationDataSize, this.expTotalRowNum] = [this.expTotalRowNum, this.validationDataSize];
 
             console.warn(this.runningMode, "Switched actual with expected for DEV mode");
-            this.convertPlainDataToMap();         
+            this.convertPlainDataToMap();
         }
 
         if (this.isDebugOn) {
@@ -145,7 +145,7 @@ class CampaignPerformanceReportValidator {
             console.log(this.runningMode, "columnNamesForValidation", this.columnNamesForValidation);
 
             /* actual data print out only in DEV mode due to heavy data in PROD*/
-            if (this.isDevRunningMode()) {                
+            if (this.isDevRunningMode()) {
                 console.log(this.runningMode, "parsedBodyActualData", this.parsedBodyActualData);
                 console.log(this.runningMode, "parsedBodyActualDataMap", this.parsedBodyActualDataMap);
             }
@@ -179,7 +179,7 @@ class CampaignPerformanceReportValidator {
                 ++validEntries;
             } else {
                 console.warn(this.runningMode, "expected row", expectedRow, "is not equal to actual row", this.parsedBodyActualDataMap.get(key),
-                "or actual map doesn't hold the key", key, "valid entries", validEntries);
+                    "or actual map doesn't hold the key", key, "valid entries", validEntries);
             }
 
             pm.expect(isIdentical).to.eql(true);
