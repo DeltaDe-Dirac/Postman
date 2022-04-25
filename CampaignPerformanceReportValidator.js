@@ -1,5 +1,5 @@
 
-export default class CampaignPerformanceReportValidator {
+class CampaignPerformanceReportValidator {
     constructor(parsedBodyExpected,
         parsedBodyActual,
         validationDataSize,
