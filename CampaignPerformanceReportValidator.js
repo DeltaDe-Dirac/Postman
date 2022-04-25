@@ -154,7 +154,7 @@ class CampaignPerformanceReportValidator {
 
     validateColumnNamesMatch() {
         this.csvHeaderFields.forEach((columnName, index) => {
-            pm.expect(columnName).to.eql(this.parsedBodyActualData.meta.fields[index]);
+            pm.expect(columnName).to.eql(this.parsedBodyActual.meta.fields[index]);
         });
     }
 
