@@ -156,7 +156,7 @@ class CampaignPerformanceReportValidator {
             if (!actual[columnName] || expected[columnName] != actual[columnName]) {
 
                 if (this.isDebugOn) {
-                    log.warn(this.runningMode, `column name: [${columnName}], not equal values, expected [${expected[columnName]}] actual [${actual[columnName]}]`);
+                    console.warn(this.runningMode, `column name: [${columnName}], not equal values, expected [${expected[columnName]}] actual [${actual[columnName]}]`);
                 }
 
                 return false;
